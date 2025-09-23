@@ -1,2 +1,2 @@
-import { useCharacters } from "./useCharacters";
-export { useCharacters };
+export { useCharacter } from "./useCharacter";
+export { useCharacters } from "./useCharacters";

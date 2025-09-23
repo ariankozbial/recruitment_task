@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useCharacters } from "./hooks";
 import {
   createColumnHelper,
@@ -7,18 +6,31 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import type { Character } from "./api/types.ts";
+import { useNavigate } from "@tanstack/react-router";
 
-export default function TestResultsComponent() {
-  const [page, setPage] = useState(1);
-  const [name, setName] = useState("");
-  const [status, setStatus] = useState("");
+type Props = {
+  page: number;
+  name: string;
+  status: string;
+  onPageChange: (page: number) => void;
+  onNameChange: (name: string) => void;
+  onStatusChange: (status: string) => void;
+};
 
+const TestResultsComponent = ({
+  page,
+  name,
+  status,
+  onPageChange,
+  onNameChange,
+  onStatusChange,
+}: Props) => {
   const { data, isLoading, isError, error } = useCharacters(page, name, status);
 
   const handleClear = () => {
-    setPage(1);
-    setName("");
-    setStatus("");
+    onPageChange(1);
+    onNameChange("");
+    onStatusChange("");
   };
 
   const columnHelper = createColumnHelper<Character>();
@@ -45,6 +57,8 @@ export default function TestResultsComponent() {
     getCoreRowModel: getCoreRowModel(),
   });
 
+  const navigate = useNavigate();
+
   return (
     <div>
       <h1>Rick & Morty — characters</h1>
@@ -60,10 +74,10 @@ export default function TestResultsComponent() {
         <input
           placeholder="Filter by name"
           value={name}
-          onChange={(e) => setName(e.target.value)}
+          onChange={(e) => onNameChange(e.target.value)}
         />
 
-        <select value={status} onChange={(e) => setStatus(e.target.value)}>
+        <select value={status} onChange={(e) => onStatusChange(e.target.value)}>
           <option value="">Any status</option>
           <option value="Alive">Alive</option>
           <option value="Dead">Dead</option>
@@ -98,7 +112,16 @@ export default function TestResultsComponent() {
             </thead>
             <tbody>
               {table.getRowModel().rows.map((row) => (
-                <tr key={row.id}>
+                <tr
+                  key={row.id}
+                  onClick={() =>
+                    navigate({
+                      to: "/characters/$characterId",
+                      params: { characterId: row.original.id.toString() },
+                    })
+                  }
+                  style={{ cursor: "pointer" }}
+                >
                   {row.getVisibleCells().map((cell) => (
                     <td key={cell.id}>
                       {flexRender(
@@ -120,10 +143,7 @@ export default function TestResultsComponent() {
               alignItems: "center",
             }}
           >
-            <button
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
-              disabled={page <= 1}
-            >
+            <button onClick={() => onPageChange(page - 1)} disabled={page <= 1}>
               Prev
             </button>
 
@@ -132,7 +152,7 @@ export default function TestResultsComponent() {
             </div>
 
             <button
-              onClick={() => setPage((prevPage) => prevPage + 1)}
+              onClick={() => onPageChange(page + 1)}
               disabled={page >= data.info.pages}
             >
               Next
@@ -142,4 +162,6 @@ export default function TestResultsComponent() {
       )}
     </div>
   );
-}
+};
+
+export default TestResultsComponent;

@@ -1,9 +1,9 @@
 const BASE_URL = "https://rickandmortyapi.com/api";
 
-export async function apiFetch<T>(
+export const apiFetch = async <T>(
   path: string,
   params?: Record<string, string | number | undefined>,
-): Promise<T> {
+): Promise<T> => {
   const url = new URL(`${BASE_URL}${path}`);
 
   if (params) {
@@ -21,4 +21,4 @@ export async function apiFetch<T>(
   }
 
   return res.json();
-}
+};

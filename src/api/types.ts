@@ -21,12 +21,19 @@ export type Character = {
   created: string;
 };
 
-export type CharacterResponse = {
-  info: {
-    count: number;
-    pages: number;
-    next: string;
-    prev: string;
-  };
+type InfoType = {
+  count: number;
+  pages: number;
+  next: string;
+  prev: string;
+};
+
+export type CharactersResponse = {
+  info: InfoType;
   results: Character[];
+};
+
+export type CharacterResponse = {
+  info: InfoType;
+  results: Character;
 };

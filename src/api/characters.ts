@@ -1,15 +1,13 @@
 import { apiFetch } from "./client.ts";
-import type { CharacterResponse } from "./types.ts";
+import type { CharactersResponse } from "./types.ts";
 
-export async function getCharacters(
+export const getCharacters = async (
   page: number,
   name: string,
   status: string,
-): Promise<CharacterResponse> {
-  const data = await apiFetch<CharacterResponse>("/character", {
+): Promise<CharactersResponse> =>
+  await apiFetch<CharactersResponse>("/character", {
     page,
     name,
     status,
   });
-  return data;
-}
