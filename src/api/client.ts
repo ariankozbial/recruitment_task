@@ -17,7 +17,12 @@ export const apiFetch = async <T>(
   const res = await fetch(url.toString());
 
   if (!res.ok) {
-    throw new Error(`API error: ${res.status} ${res.statusText}`);
+    if (res.status === 404) {
+      throw new Error(
+        `No data for given filters. Please click "Clear" button and try again.`,
+      );
+    }
+    throw new Error("Error occured");
   }
 
   return res.json();

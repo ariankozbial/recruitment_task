@@ -1,5 +1,5 @@
 import { apiFetch } from "./client.ts";
-import type { CharactersResponse } from "./types.ts";
+import type { CharactersResponse } from "../types.ts";
 
 export const getCharacters = async (
   page: number,

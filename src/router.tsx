@@ -3,20 +3,19 @@ import {
   createRoute,
   createRouter,
 } from "@tanstack/react-router";
-import TestResultsWrapper from "./TestResultsWrapper.tsx";
-import CharacterDetailPage from "./CharacterDetailPage.tsx";
+import { CharactersList, CharacterDetails } from "./components";
 
 const rootRoute = createRootRoute();
 
 const charactersRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/",
-  component: TestResultsWrapper,
+  component: CharactersList,
   validateSearch: (search: Record<string, unknown>) => {
     return {
       page: Number(search.page) || 1,
-      name: (search.name as string) ?? "",
-      status: (search.status as string) ?? "",
+      name: typeof search.name === "string" ? search.name : "",
+      status: typeof search.status === "string" ? search.status : "",
     };
   },
 });
@@ -24,7 +23,7 @@ const charactersRoute = createRoute({
 const characterDetailRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/characters/$characterId",
-  component: CharacterDetailPage,
+  component: CharacterDetails,
 });
 
 const routeTree = rootRoute.addChildren([
