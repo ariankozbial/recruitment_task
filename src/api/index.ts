@@ -1,1 +1,1 @@
-export { getCharacters } from './characters.ts';
+export { getCharacters } from "./characters.ts";
