@@ -1,69 +1,39 @@
-# React + TypeScript + Vite
+# Rick & Morty Characters App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A small single-page application built with **React 19 + TypeScript**, using **TanStack Query**, **TanStack Router**, and **TanStack Table**.  
+App fetches data from the [Rick & Morty API](https://rickandmortyapi.com/documentation) and provides filtering, pagination, and character detail pages.
 
-Currently, two official plugins are available:
+## Project Setup
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+This project was bootstrapped with **[Vite](https://vitejs.dev/)** using the official **React + TypeScript template**.
 
-## Expanding the ESLint configuration
+## Features
+- Paginated list of characters
+- Filtering by **name** and **status**
+- Clear filters button
+- Refresh button (with debounce) to re-fetch the current page
+- Character details available on a dedicated route
+- Pagination and filter state persisted in the URL (shareable link, survives refresh)
+- Basic error handling 
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Not Implemented
+- **Page size selection for pagination**  
+  Rick & Morty API does not provide a way to control `pageSize` (number of results per page).  
+  The API always returns a fixed number of results per page (`20`) and because of that I decided to not implement any custom solution 
+that could make the entire solution problematic.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Getting Started
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Prerequisites
+- **Node.js >=22**
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+# Install dependencies
+yarn install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+# Run app
+yarn dev
 ```
+
