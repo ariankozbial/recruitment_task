@@ -1,11 +1,12 @@
+import { useMemo } from "react";
 import {
   createColumnHelper,
   flexRender,
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import type { Character } from "../../../types.ts";
 import { useNavigate } from "@tanstack/react-router";
+import type { Character } from "../../../types.ts";
 
 export const CharactersTable = ({
   characters,
@@ -15,21 +16,24 @@ export const CharactersTable = ({
   const navigate = useNavigate();
   const columnHelper = createColumnHelper<Character>();
 
-  const columns = [
-    columnHelper.accessor("image", {
-      header: "Avatar",
-      cell: (info) => <img src={info.getValue()} alt="avatar" width={50} />,
-    }),
-    columnHelper.accessor("name", {
-      header: "Name",
-    }),
-    columnHelper.accessor("status", {
-      header: "Status",
-    }),
-    columnHelper.accessor("species", {
-      header: "Species",
-    }),
-  ];
+  const columns = useMemo(
+    () => [
+      columnHelper.accessor("image", {
+        header: "Avatar",
+        cell: (info) => <img src={info.getValue()} alt="avatar" width={50} />,
+      }),
+      columnHelper.accessor("name", {
+        header: "Name",
+      }),
+      columnHelper.accessor("status", {
+        header: "Status",
+      }),
+      columnHelper.accessor("species", {
+        header: "Species",
+      }),
+    ],
+    [],
+  );
 
   const table = useReactTable({
     data: characters,

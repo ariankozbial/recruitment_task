@@ -1,6 +1,7 @@
-import { useCharacters } from "../../../hooks";
-import { useRef } from "react";
 import { CharactersTable } from "./CharactersTable.tsx";
+import { useCharactersData } from "../hooks";
+import { Filters } from "./Filters.tsx";
+import { Pagination } from "./Pagination.tsx";
 
 type Props = {
   page: number;
@@ -21,53 +22,24 @@ export const CharactersList = ({
   handleStatusChange,
   handleClear,
 }: Props) => {
-  const { data, isLoading, isError, error, refetch, isFetching } =
-    useCharacters(page, name, status);
-
-  const debounceRef = useRef<number | undefined>(undefined);
-
-  const handleRefresh = () => {
-    if (debounceRef.current) {
-      window.clearTimeout(debounceRef.current);
-    }
-
-    debounceRef.current = window.setTimeout(() => {
-      refetch();
-    }, 500);
-  };
+  const { data, isLoading, isError, error, isFetching, handleRefresh } =
+    useCharactersData({ page, name, status });
 
   const showData = data && !isLoading && !isFetching;
 
   return (
     <div>
       <h1>Rick & Morty characters</h1>
-      <div
-        style={{
-          marginBottom: 12,
-          display: "flex",
-          gap: 8,
-          alignItems: "center",
-        }}
-      >
-        <input
-          placeholder="Filter by name"
-          value={name}
-          onChange={(e) => handleNameChange(e.target.value)}
-        />
-        <select
-          value={status}
-          onChange={(e) => handleStatusChange(e.target.value)}
-        >
-          <option value="">All</option>
-          <option value="Alive">Alive</option>
-          <option value="Dead">Dead</option>
-          <option value="unknown">unknown</option>
-        </select>
-        <button onClick={handleClear}>Clear</button>
-        <button onClick={handleRefresh} disabled={isLoading || isFetching}>
-          Refresh
-        </button>
-      </div>
+
+      <Filters
+        name={name}
+        status={status}
+        handleNameChange={handleNameChange}
+        handleStatusChange={handleStatusChange}
+        handleClear={handleClear}
+        handleRefresh={handleRefresh}
+        refreshButtonDisabled={isLoading || isFetching}
+      />
 
       {(isLoading || isFetching) && <p>Loading...</p>}
 
@@ -76,30 +48,12 @@ export const CharactersList = ({
       {showData && (
         <>
           <CharactersTable characters={data?.results || []} />
-          <div
-            style={{
-              marginTop: 12,
-              display: "flex",
-              gap: 8,
-              alignItems: "center",
-            }}
-          >
-            <button
-              onClick={() => handlePageChange(page - 1)}
-              disabled={page <= 1}
-            >
-              Prev
-            </button>
-            <div>
-              Page {page} / {data.info.pages}
-            </div>
-            <button
-              onClick={() => handlePageChange(page + 1)}
-              disabled={page >= data.info.pages}
-            >
-              Next
-            </button>
-          </div>
+
+          <Pagination
+            page={page}
+            handlePageChange={handlePageChange}
+            pagesCount={data.info.pages}
+          />
         </>
       )}
     </div>
