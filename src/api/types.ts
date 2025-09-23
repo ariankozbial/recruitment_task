@@ -6,7 +6,7 @@ type CharacterLocation = {
   url: string;
 };
 
-type Character = {
+export type Character = {
   id: number;
   name: string;
   status: CharacterStatus;

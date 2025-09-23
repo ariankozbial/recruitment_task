@@ -1,5 +1,12 @@
 import { useState } from "react";
 import { useCharacters } from "./hooks";
+import {
+  createColumnHelper,
+  flexRender,
+  getCoreRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+import type { Character } from "./api/types.ts";
 
 export default function TestResultsComponent() {
   const [page, setPage] = useState(1);
@@ -13,6 +20,30 @@ export default function TestResultsComponent() {
     setName("");
     setStatus("");
   };
+
+  const columnHelper = createColumnHelper<Character>();
+
+  const columns = [
+    columnHelper.accessor("image", {
+      header: "Avatar",
+      cell: (info) => <img src={info.getValue()} alt="avatar" width={50} />,
+    }),
+    columnHelper.accessor("name", {
+      header: "Name",
+    }),
+    columnHelper.accessor("status", {
+      header: "Status",
+    }),
+    columnHelper.accessor("species", {
+      header: "Species",
+    }),
+  ];
+
+  const table = useReactTable({
+    data: data?.results || [],
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+  });
 
   return (
     <div>
@@ -48,27 +79,38 @@ export default function TestResultsComponent() {
 
       {data && (
         <>
-          <ul style={{ listStyle: "none", padding: 0 }}>
-            {data.results.map((c) => (
-              <li
-                key={c.id}
-                style={{
-                  display: "flex",
-                  gap: 12,
-                  marginBottom: 10,
-                  alignItems: "center",
-                }}
-              >
-                <img src={c.image} alt={c.name} width={60} height={60} />
-                <div>
-                  <div style={{ fontWeight: 600 }}>{c.name}</div>
-                  <div style={{ fontSize: 13 }}>
-                    {c.status} — {c.species}
-                  </div>
-                </div>
-              </li>
-            ))}
-          </ul>
+          <table border={1} cellPadding={5} cellSpacing={0}>
+            <thead>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <tr key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => (
+                    <th key={header.id}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
+                    </th>
+                  ))}
+                </tr>
+              ))}
+            </thead>
+            <tbody>
+              {table.getRowModel().rows.map((row) => (
+                <tr key={row.id}>
+                  {row.getVisibleCells().map((cell) => (
+                    <td key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
 
           <div
             style={{
